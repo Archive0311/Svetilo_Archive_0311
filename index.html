@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="СИСТЕМА 0311 - АРХИВ НАБЛЮДЕНИЯ">
-    <title>СИСТЕМА 0311 АКТИВНО</title>
+    <title>СИСТЕМА 0311</title>
     <link rel="icon" href="https://raw.githubusercontent.com/Archive0311/Svetilo_Archive_0311/main/favicon.ico" type="image/x-icon">
     <style>
         * {
@@ -12,202 +11,126 @@
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            cursor: none;
         }
 
         body {
-            background-color: #000000;
+            background: #000;
             color: #ff0000;
             font-family: 'Courier New', monospace;
             overflow: hidden;
             height: 100vh;
             position: relative;
-            cursor: none;
         }
 
-        
-        body::before {
-            content: "";
+        /* Эффект статичного шума */
+        .noise {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(255, 0, 0, 0.03) 1px, transparent 1px),
-                radial-gradient(circle at 80% 70%, rgba(255, 0, 0, 0.02) 1px, transparent 1px);
-            background-size: 50px 50px, 70px 70px;
-            animation: noise 0.2s infinite;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
             pointer-events: none;
             z-index: 1;
+            animation: noise 0.2s infinite;
             opacity: 0.4;
         }
 
         @keyframes noise {
-            0% { background-position: 0 0, 0 0; }
-            100% { background-position: 50px 50px, 70px 70px; }
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-10px, -10px); }
         }
 
-        
-        @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.95; }
-            51% { opacity: 0.99; }
-            52% { opacity: 0.97; }
-        }
-
-        .screen {
-            position: absolute;
+        /* Мерцание экрана */
+        .flicker {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            animation: flicker 0.1s infinite;
+            background: rgba(255, 0, 0, 0.03);
             pointer-events: none;
             z-index: 2;
+            animation: flicker 0.1s infinite;
         }
 
-        .container {
-            position: relative;
-            z-index: 3;
-            padding: 10px;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+        @keyframes flicker {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
         }
 
-        .header {
-            text-align: center;
-            padding: 10px;
-            border-bottom: 1px solid #ff0000;
-            margin-bottom: 5px;
-            position: relative;
+
+
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
         }
 
-        .header h1 {
-            font-size: 2.8rem;
-            letter-spacing: 5px;
-            text-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .header p {
-            font-size: 0.9rem;
-            color: #cc0000;
-            margin-top: 5px;
-        }
-
+        /* Контейнер для ASCII */
         .ascii-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             white-space: pre;
-            font-size: 10px;
+            font-size: 8px;
             line-height: 1;
             color: #ff0000;
-            letter-spacing: 0.3px;
-            flex-grow: 1;
-            overflow: hidden;
-            position: relative;
+            letter-spacing: 0.5px;
             text-align: center;
-            padding: 5px;
-            border: 1px dashed #990000;
-            margin: 5px 0;
-            background: rgba(0, 0, 0, 0.8);
+            z-index: 4;
+            max-width: 100vw;
+            max-height: 100vh;
+            overflow: hidden;
+            padding: 20px;
         }
 
-        .ascii-container span.x-char {
-            text-shadow: 0 0 3px #ff0000, 0 0 6px #ff3333;
+        /* Свечение для 'x' */
+        .x-char {
+            text-shadow: 
+                0 0 3px #ff0000,
+                0 0 6px #ff3333,
+                0 0 12px #ff6666;
             animation: glow 1.5s infinite alternate;
         }
 
         @keyframes glow {
-            from { text-shadow: 0 0 3px #ff0000, 0 0 6px #ff3333; }
-            to { text-shadow: 0 0 6px #ff0000, 0 0 12px #ff3333, 0 0 18px #ff6666; }
+            from { opacity: 0.7; }
+            to { opacity: 1; }
         }
 
         /* Случайные мерцающие символы */
-        .blink-char {
-            animation: char-blink 0.3s infinite;
+        .blink {
+            animation: blink 0.3s infinite;
         }
 
-        @keyframes char-blink {
+        @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.2; }
         }
 
-        .info-panel {
-            background: rgba(10, 0, 0, 0.9);
-            border: 1px solid #ff0000;
-            padding: 12px;
-            margin-top: 5px;
-            font-size: 0.85rem;
-            position: relative;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
-        }
-
-        .info-panel h2 {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-            text-align: center;
-            color: #ff4444;
-            text-transform: uppercase;
-        }
-
-        .info-panel ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .info-panel li {
-            margin-bottom: 6px;
-            padding-left: 15px;
-            position: relative;
-            border-left: 2px solid #990000;
-            padding-left: 10px;
-        }
-
-        .status {
-            color: #00ff00;
-            font-weight: bold;
-            text-shadow: 0 0 8px #00ff00;
-            animation: status-pulse 1s infinite;
-        }
-
-        @keyframes status-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #880000;
-            padding: 8px;
-            border-top: 1px solid #660000;
-            margin-top: 5px;
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 16px;
-            background-color: #ff0000;
-            margin-left: 3px;
-            animation: blink 0.8s infinite;
-            vertical-align: middle;
+        /* Скрытый текст в углу */
+        .hidden-text {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 9px;
+            color: #330000;
+            opacity: 0.3;
+            z-index: 5;
         }
 
         /* Всплывающие сообщения */
-        .glitch-text {
+        .message {
             position: fixed;
-            font-size: 0.7rem;
+            font-size: 12px;
             color: #ff0000;
             opacity: 0;
             pointer-events: none;
-            z-index: 999;
+            z-index: 6;
             animation: float 5s linear;
+            text-shadow: 0 0 5px #ff0000;
         }
 
         @keyframes float {
@@ -217,52 +140,94 @@
             100% { top: 0%; opacity: 0; }
         }
 
-        @keyframes scanline {
-            0% { top: 0%; }
-            100% { top: 100%; }
+        /* Мигающий курсор */
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background-color: #ff0000;
+            margin-left: 2px;
+            animation: cursor-blink 0.8s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes cursor-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Статус бар */
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid #ff0000;
+            padding: 5px 10px;
+            font-size: 10px;
+            z-index: 7;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Предупреждение */
+        .warning {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            color: #ff0000;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 8;
+            animation: warning 10s infinite;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        @keyframes warning {
+            0%, 95% { opacity: 0; }
+            96%, 100% { opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <div class="screen"></div>
+    <div class="noise"></div>
+    <div class="flicker"></div>
     <div class="scanline"></div>
-
-    <div class="container">
-        <div class="header">
-            <h1>СИСТЕМА <span class="blink">0311</span></h1>
-            <p>АРХИВ НАБЛЮДЕНИЯ | СТАТУС: <span class="status">АКТИВЕН</span></p>
-        </div>
-
-        <div class="ascii-container" id="ascii-art"></div>
-
-        <div class="info-panel">
-            <h2>СТАТУС АРХИВА</h2>
-            <ul>
-                <li><strong>ЦЕЛЬ:</strong> SVETILO_0</li>
-                <li><strong>ДАТА АКТИВАЦИИ:</strong> 01.01.2026</li>
-                <li><strong>СТАТУС:</strong> <span class="status">НАБЛЮДЕНИЕ АКТИВНО</span></li>
-                <li><strong>ФАЗА:</strong> 2 (АРХИВАЦИЯ)</li>
-                <li id="current-time"><strong>ТЕКУЩЕЕ ВРЕМЯ (UTC+2):</strong> ЗАГРУЗКА...</li>
-                <li><strong>ЗАФИКСИРОВАННЫЕ КАНАЛЫ:</strong><br>
-                    █ Discord-сервер Svetilo_0<br>
-                    █ Telegram-канал Svetilo_Squad<br>
-                    █ YouTube-трансляции<br>
-                    █ Twitch-стримы
-                </li>
-            </ul>
-        </div>
-
-        <div class="footer">
-            <p>АРХИВ ЯВЛЯЕТСЯ ЧАСТЬЮ СИСТЕМЫ НАБЛЮДЕНИЯ 0311</p>
-            <p>ВСЕ ДАННЫЕ ЗАФИКСИРОВАНЫ<span class="cursor"></span></p>
-            <p style="font-size: 6px; opacity: 0.3;">https://archive0311.github.io/Svetilo_Archive_0311/</p>
-        </div>
+    
+    <div class="ascii-container" id="ascii-art"></div>
+    
+    <div class="hidden-text">
+        0311<br>
+        АРХИВ АКТИВЕН<br>
+        НЕ ЗАКРЫВАЙ
+    </div>
+    
+    <div class="warning" id="warning">
+        ⚠ СИСТЕМА НАБЛЮДАЕТ ЗА ТОБОЙ ⚠
+    </div>
+    
+    <div class="status-bar">
+        <span>СИСТЕМА 0311 | ЦЕЛЬ: SVETILO_0 | СТАТУС: <span style="color:#00ff00;">АКТИВНО</span></span>
+        <span id="time">00:00:00</span>
     </div>
 
-    
-    <a href="0311.html" style="position: fixed; bottom: 5px; right: 5px; color: #330000; font-size: 6px; text-decoration: none; opacity: 0.1; z-index: 1000;">0311</a>
+    <!-- Скрытая ссылка -->
+    <a href="0311.html" style="position: fixed; top: 5px; left: 5px; color: #330000; font-size: 8px; text-decoration: none; opacity: 0.1; z-index: 1000;">0311</a>
+
+    <!-- Аудио -->
+    <audio id="static" loop>
+        <source src="https://assets.mixkit.co/active_storage/sfx/286/286-preview.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="click">
+        <source src="https://assets.mixkit.co/active_storage/sfx/250/250-preview.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
+        // ASCII-арт (твой оригинальный)
         const asciiOwl = `                                                                                                                                               
                                               xxxxxxxxxxx                                                                                       x                                                     
                                              xxxxxxxxxxxxx                                                                                     x                                                      
@@ -340,11 +305,11 @@
                                                                                                                                         xxxx                      xx       xxxxxxxx    xxxx          xxx
         `;
 
-        
+        // Вставляем ASCII-арт
         const container = document.getElementById('ascii-art');
         const lines = asciiOwl.split('\n');
         
-        lines.forEach(line => {
+        lines.forEach((line, lineIndex) => {
             const lineDiv = document.createElement('div');
             
             for (let char of line) {
@@ -355,9 +320,9 @@
                     charSpan.classList.add('x-char');
                 }
                 
-                
-                if (Math.random() < 0.005) {
-                    charSpan.classList.add('blink-char');
+                // Случайное мерцание
+                if (Math.random() < 0.01) {
+                    charSpan.classList.add('blink');
                 }
                 
                 lineDiv.appendChild(charSpan);
@@ -366,62 +331,88 @@
             container.appendChild(lineDiv);
         });
 
-        
+        // Обновление времени
         function updateTime() {
             const now = new Date();
             const timeString = now.toLocaleString('ru-RU', {
                 timeZone: 'Europe/Kiev',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit'
             });
-            document.getElementById('current-time').innerHTML = `<strong>ТЕКУЩЕЕ ВРЕМЯ (UTC+2):</strong> ${timeString}`;
+            document.getElementById('time').innerHTML = `${timeString}`;
         }
         setInterval(updateTime, 1000);
         updateTime();
 
-        
-        const glitchMessages = [
-            "ДОСТУП ОГРАНИЧЕН",
-            "СИСТЕМА НАБЛЮДАЕТ",
-            "0311",
-            "АРХИВИРОВАНИЕ...",
-            "ЦЕЛЬ ОБНАРУЖЕНА",
-            "НЕТ ВЫХОДА",
-            "ВСЕ ДАННЫЕ ЗАФИКСИРОВАНЫ"
+        // Случайные сообщения
+        const messages = [
+            "ОН ТЕБЯ ВИДИТ",
+            "НЕ ОБОРАЧИВАЙСЯ",
+            "0311 ВСЁ ЗНАЕТ",
+            "ТЫ В АРХИВЕ",
+            "БЕГСТВО БЕССМЫСЛЕННО",
+            "СИСТЕМА АКТИВНА",
+            "НЕТ ВЫХОДА"
         ];
 
         setInterval(() => {
             if (Math.random() < 0.3) {
                 const msg = document.createElement('div');
-                msg.className = 'glitch-text';
-                msg.textContent = glitchMessages[Math.floor(Math.random() * glitchMessages.length)];
-                msg.style.left = Math.random() * 90 + '%';
+                msg.className = 'message';
+                msg.textContent = messages[Math.floor(Math.random() * messages.length)];
+                msg.style.left = Math.random() * 85 + '%';
                 document.body.appendChild(msg);
                 setTimeout(() => msg.remove(), 5000);
             }
         }, 2000);
 
-        
-        function playStatic() {
-            
-            console.log("AUDIO: SYSTEM NOISE ACTIVE");
-        }
+        // Звуки
+        const staticSound = document.getElementById('static');
+        const clickSound = document.getElementById('click');
 
-        
+        // Включить фоновый шум
+        setTimeout(() => {
+            staticSound.volume = 0.1;
+            staticSound.play().catch(() => {});
+        }, 1000);
+
+        // Клик = звук
         document.addEventListener('click', () => {
-            document.body.style.cursor = 'none';
-            playStatic();
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => {});
         });
 
-        
+        // Случайные вспышки предупреждения
+        setInterval(() => {
+            if (Math.random() < 0.1) {
+                document.getElementById('warning').style.animation = 'none';
+                setTimeout(() => {
+                    document.getElementById('warning').style.animation = 'warning 10s infinite';
+                }, 10);
+            }
+        }, 3000);
+
+        // Изменение заголовка
+        const titles = ["0311", "СИСТЕМА АКТИВНА", "НЕ ЗАКРЫВАЙ", "ОН СМОТРИТ"];
+        let titleIndex = 0;
+        setInterval(() => {
+            document.title = titles[titleIndex];
+            titleIndex = (titleIndex + 1) % titles.length;
+        }, 2000);
+
+        // Предупреждение при закрытии
         window.addEventListener('beforeunload', (e) => {
             e.preventDefault();
-            e.returnValue = 'СИСТЕМА 0311 ВСЁ ВИДИТ';
+            e.returnValue = 'СИСТЕМА 0311 НЕ ОТПУСТИТ';
         });
+
+        // Сообщение в консоль
+        console.log('%c⚠ СИСТЕМА 0311 ⚠', 'color: red; font-size: 24px; font-weight: bold;');
+        console.log('Архив наблюдения активен');
+        console.log('Цель: SVETILO_0');
+        console.log('Дата: 01.01.2026');
+        console.log('Не пытайтесь вмешиваться в систему.');
     </script>
 </body>
 </html>
