@@ -2,32 +2,313 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>АРХИВ СИСТЕМЫ 0311</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Архив системы 0311. Наблюдение активно.">
+    <meta name="keywords" content="0311, архив, система, наблюдение, Svetilo_0">
+    <title>СИСТЕМА 0311 | АРХИВ</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/Archive0311/Svetilo_Archive_0311/main/favicon.ico" type="image/x-icon">
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; padding: 20px; }
-        a { color: #0ff; }
-        .log { color: #888; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: #ff0000;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Эффект статичного шума */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #cc0000;
+        }
+
+        .ascii-container {
+            white-space: pre;
+            font-size: 12px;
+            line-height: 1;
+            color: #ff0000;
+            letter-spacing: 0.5px;
+            margin: 20px 0;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .ascii-container span.x-char {
+            text-shadow: 0 0 3px #ff0000, 0 0 6px #ff3333;
+        }
+
+        .ascii-container:hover {
+            filter: brightness(1.2);
+        }
+
+        .info-panel {
+            background-color: rgba(20, 0, 0, 0.8);
+            border: 1px solid #ff0000;
+            padding: 20px;
+            margin-top: 30px;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+
+        .info-panel h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #ff4444;
+        }
+
+        .info-panel ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .info-panel li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .info-panel li:before {
+            content: ">";
+            position: absolute;
+            left: 0;
+            color: #ff5555;
+        }
+
+        .status {
+            color: #00ff00;
+            font-weight: bold;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #880000;
+            position: relative;
+            z-index: 2;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Мигающий курсор */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background-color: #ff0000;
+            margin-left: 5px;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
-    <h1>АРХИВ СИСТЕМЫ 0311</h1>
-    <h2>ЦЕЛЬ: SVETILO_0</h2>
-    <h3>ДАТА АКТИВАЦИИ: 01.01.2026</h3>
-    
-    <p><strong>СТАТУС:</strong></p>
-    <ul>
-        <li>Наблюдение: <strong>АКТИВНО</strong></li>
-        <li>Фаза: 2 (архивация)</li>
-        <li>Следующее обновление: <strong>02.01.2026 00:00 UTC+2</strong></li>
-    </ul>
-    
-    <p><strong>ЗАФИКСИРОВАНЫЕ КАНАЛЫ:</strong></p>
-    <ul>
-        <li>Discord-сервер <strong>Svetilo_0</strong></li>
-        <li>Telegram-канал <strong>Svetilo_Squad</strong></li>
-        <li>YouTube-трансляции</li>
-    </ul>
-    
-    <p class="log">ЛОГ: 01.01.2026 14:00 — архив опубликован</p>
+    <div class="header">
+        <h1>СИСТЕМА <span class="blink">0311</span></h1>
+        <p>АРХИВ НАБЛЮДЕНИЯ | АКТИВЕН</p>
+    </div>
+
+    <div class="ascii-container" id="ascii-art"></div>
+
+    <div class="info-panel">
+        <h2>СТАТУС АРХИВА</h2>
+        <ul>
+            <li><strong>ЦЕЛЬ:</strong> SVETILO_0</li>
+            <li><strong>ДАТА АКТИВАЦИИ:</strong> 01.01.2026</li>
+            <li><strong>СТАТУС:</strong> <span class="status">НАБЛЮДЕНИЕ АКТИВНО</span></li>
+            <li><strong>ФАЗА:</strong> 2 (АРХИВАЦИЯ)</li>
+            <li><strong>СЛЕДУЮЩЕЕ ОБНОВЛЕНИЕ:</strong> 02.01.2026 00:00 UTC+2</li>
+            <li><strong>ЗАФИКСИРОВАННЫЕ КАНАЛЫ:</strong><br>
+                - Discord-сервер Svetilo_0<br>
+                - Telegram-канал Svetilo_Squad<br>
+                - YouTube-трансляции<br>
+                - Twitch-стримы
+            </li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p>АРХИВ ЯВЛЯЕТСЯ ЧАСТЬЮ СИСТЕМЫ НАБЛЮДЕНИЯ 0311</p>
+        <p>ВСЕ ДАННЫЕ ЗАФИКСИРОВАНЫ<span class="cursor"></span></p>
+    </div>
+
+    <script>
+        const asciiOwl = `                                                                                                                                               
+                                              xxxxxxxxxxx                                                                                       x                                                     
+                                             xxxxxxxxxxxxx                                                                                     x                                                      
+                                               xxxxxxxxxxxxx                                                                               xx x                                                       
+                                                  xxx xxxxxxx                                xxxxxxxx                                     xxx                                                          
+                                                    xxxxxxxxxx                  xxx              xxxxxxxxxxx                           x  xxx                                                          
+                                                        xxxxxx               xxx xx  x  xx           xx  x            x  xxxxx x    xxxxxxx                                                            
+                                                          xxxxx                  x   x xx          xx     xxx xx                  xxxxxxx                                                              
+                                                             xxxxx       xx           xxxx       xxxxxx                 xxxxxx      xxxx                                                               
+                                                             xxxxx    xxxxxxxxxxx  x    x   xx   xxxxxxxx    xx  xxxxx                                                                                 
+                                                           xxxxxxxxxx  xxx xxxxxxx                xxxx   x     xx   x  xx      x  xx                                 x                                
+                                                           xx xxxxxxxxx   xxx  xxx  xxx  xx   xxxxxx xxxx      xxxx     x x   xxxxxx   xx                                                             
+                                                         xxxxxxxxxxxxxx  xx xxxx   xx  xx    xxx        xxxx    xxxxxx     xxxxxxxxx  xx x  x                                                         
+                                                             xxxxxxxxxxx     x  x     x  xxxxx  xxx  xxx xxxxxxx x       x  xxxxxxx xxx     x                                                         
+                                                         xxxxxxxxxxxxxxx x x xx    xxxxxxxxxxxxxxx xx   xxxxx     x  xxxxxxxxxxxx                                xxxxxx                               
+                                                            xxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxx  xxx  xx xxxxxx   xxxxx       x                                  xxxxxx                              
+                                x                           xxxxxxxxxx      xx xxxxxx      xx  xxxxxxxx xxx x  xxxxxxxx    xxx  x xxxxxx                                                               
+                             xx                               x   xxxx     xxx    xx xxx xxxx xxx   xxxxxx      xxxx      x xxxxxxxxxxxx                        xx xxxx x                             
+                                                                  xxxxxxxxxxx xxx   x  xx  xxx       xxxxx xxxx  xxxxx   xxxxxxxxxxxxx x                       xx xxxxxxxx                            
+                            x                                xx    xxxxxxxxxxxxx    xxxx xx   xxxxxxxxxx    xxxxx xxxx    x xxxxxxxxx                            xxxxxxxxxxxx                          
+                           x                                xxxxxx   xx xxxxxxxxxx xxxxxx  xxxxxxx      xxx  xxxxxxxxxxxxxxxxxxxxxxxxxx                           xxxxxxxxxxxx                         
+                                                             xxxxxxx xxxxxxxxx xxxx  xx xxxxx  xxxx xx   xxxxxxxxxxxxxxx xxxxxxxxxxxxx                                 xxxxxxxx                        
+                                       x                     xxxxxx  xxxxxxx   xxx  xx xxxxxx xx  xxxxx   xxxxxxxxx x  x xxx    xxxx x                                    xxxxx                        
+                                         x                    xxxxxxxx   xxxx       xxxxx xx xxx xxxx  xxx xxxxxxxxxxxxxxxxxxxxxxxxx  x                   x              xxxxxxxx                      
+                                                               xxxxxxxx  xxxxxxxxx  xx xx x xxxxxxxxx xxxxx xxxxxxxxxxxxxxxxxxxxxx x                   xxxx    xx          xxxxxxx                     
+                                                             xx  x xxxxx  x xxx        xxxx xxxxxxxx x   xxxxxxxxxx  xxxxxxxxxxxxx                     xx   xx             xxxxxx                      
+                                                               xxxxxxxxxx xxxxxxx    xxx x     xxxxxxx   xxxxxxxxxxxxxx xx xxxxxxxx                      xx   x             xxxx xx                     
+                                                                xx xxxxxx  xxxxxxx xxx x xx      xxxxxx    x  xx xxxxx   xxxxxxxx xx x                 xxxx xxxxxxx    x      xxx xx                    
+                                            xxxxxxxxxx            xxxxxxx   xxxxx xxxxx    x      xxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxx x              xx    xx   xx               xxx x                    
+                                            x    x                    xxxxx xxxxx  xxxxx          xxx xxx xxxxxxxxxxxxxx xxxxxxxx       xxxxxxxxxxxxxxxxxxxxxx     xx          xxxx x                   
+                                                                   xxx   xx  x xx  xx xxx xxx     xxxxxxx xxxxxxxxxxxxxxxxxxxxxxxx      x       xxxxxxx  xxx                    xxxx                    
+                                                                      xxxxxx  xx       xxxx xxxxx xx  x xx  x      xx xxxxxxxxxx                                    xx             xx                   
+                                                                    xxxxx xx  xxxxx xxxxxxxxxxxx xx  x xx xxx  xxxxx   xxxxxx                                                    xx      x              
+                                                                      xxxxxxx x xx     xx xxxxxxxx    xxxxxxxxxxxx xxxxxxxx                                                      xx                     
+                                                                         xxxxx         xx  xxxxx xx   xx  xx xxxxxx xxx                        x                      xx     x       xx   x             
+                                                xxx                       xxxxx  xxx    xxxxxxxxxxx xx        x xxxxxx                      xxxxx                                 xxx  x                
+                                                xxxx                        xxxx  xx xx  xxxxxxxx  xx x  xxxxxxxx xx                       xxxxxxx                     xx       x     x                 
+                                                xxxxxx                       xxxxxxxx  xxxxxx  xxx xxxxxxxxxxxxxxx       xx xxxx         xxxxxxxxx   x                                                   
+                                                 xxxxxxxxx                     xxxxxxxxxxxxxx x     xx  xxxxxxxxxxx       xxxxxxxxxxxxxxxxxxxxxxx   xxxx                               x   x            
+                                                   xxxxxxxxxx    xx              xxxxxx xxx    xxxxx     xxxxxxx           xxxxxxxxxxxxxxxxxxxx    xxxxxx                                    x          
+                                                      xxxxxxxxxxxx               xxxxxxxxxxxxxx        xxxxxxx x  xxx         xxxxxxxxxxxxxx     xxxxxx       xxx                         xx            
+                                            xx xxx                                xxxxxxxxx  x    xxxxxxxxxxxx x  xxxx x            xxxxx     xxxxxxxxx   x     xx                         x            
+                                                    x xx                         xxxxxxxxxxxxxxxxxxxxxxxxxxxx    xxxxxx xxxxx xxxxxxxxxxxxxxxxxxxxxx                                        x           
+                                                  xxxx xx        xxxxxxxx            x xxxxxxxxx xxxxxxxxxxxxx  xxxxxxxxxxxxxxx    xxxxxxxxxxxxxxxx  x      x     x            x              x         
+                                                      x       xxxxxxxxxxx                 xx x  xxxxxxxxxxx x    xxxxxxxxx xxxxxxxxxxx   xxx  xx     x  x     x      x                        xx        
+                                                          xxxxxxxxxxxxxxxxxxx          x  xxx xx   xxxx        xxxxxxxxxx  xxx xxxxxxxxxxxxxxxx xxx    xxxx  xxx        x    x                          
+                                                     xx xxxxxxxxxx xxxxxx  xx   x     x      xxxxxx   x x    xxxxxxxxxxxx    xxxxxxxxxxxxxxxxxxxxxxxxx  x     xx           xx        x  x               
+                                                   xxxxxxx  xx       xxxxx   x    xxx    x   xxxxxx xxxxxxx  xxxxxxx xx xxxxxxxxx xxxxxxxxxxxxxxxxxxx xxxx  x   x    x   xxx                            
+                                          x x   xxxxxx xx  x         xxxx  xxx   xxxxx   x  xxx xxxxxxx  xxx x xxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxx xx              xxxxx   x      x                  
+                       x                   x  x xxxxxxxx              xxxxxxx   x   xxxxxxx xxxxxxx  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxx  x      xxx  xxx  xx xxx                    
+                         xx                 x   xxxx        x xxx       x xx xxxxx xxxxx      xxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  xxxxxxxx x x  xx   xxxxxxxxxx                          
+                          x                  x        xxxxxx xxx  xx     xxxxxxxxxxxxxxxxxx   xxxx  xxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx    x   xxxx  xxxxxx x x            x       
+                                                           xxx  xxxxxxx   xxxxxxxxxxx xxxx     xxx     xxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx        x xxx x xx xxx  x           x       
+                         x                                x xxx xxxxxxxxxxx xxxxxxxxxxxxx     xxxx    xxxxxxxxxxxxxxxxxxxxxxxxxxx   x     xxxxxxxxxxxx xx  xxx xx xx     xx   x x          x            
+                                                   xx     xx  xx  xxxxxx  x  xxxxxxxxxxxx      xx     xxxxxxxxxxxxxxxxxxxxxxxx  xxxxxxxx           xxx      xx  xxx       xx      x    xxxx x  x   x    
+                                                xx   xx x    xx  x   xx x  x   xxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxx  xxx       xxx  xxxxx xxxxxxxxx xx   xx  xx          xxx      xx             
+                                                 xxxx xxx      x       xxxxxxxxxxxxxxxx               xxxxxxxxxxxxxxxxxxxx x         xxxxxxxxxxxxxxxxxxxxxxxxxxxx  xx              x x           xx      
+                                               xxxxxx        xxx      x xxxxxxxxxxxx                     xxxxxxxxxxxxxxxxx  xxxxxxx x   x      xxxxxxxxxx  xxxxxxx    xx x           x                   
+                                               xxx            x    xxxxxxxxxxxxxxxxxxx                    xxxxxx xxxxxxxxxx  x    xx         x    xxxxxxxxx  xxxxxxxx                     x              
+                                            x x x           x         xxxxxxxxxxxxxxxxxx                xxxxxxxxx xxxxxxxxx                   xxxx    xxxx      xxxxxxx                                  
+                                  x          xx                      xx xxx xxxxxxxxxxxxx              xxxxxxxxxxxxxxxxxx  xx                  x   x      xx   x      x                           x      
+                                                                           xx  xxxxxxxxxxx            xxxxxxxxxxxxxxxxx  xxx                     x  x   xxxxx    x                                xx     
+                                         x                                    xx xxxxxxxxx          xxxxxxxxxxxxxxx  xxxx   xxx x    xx      x       x     xxx                                      x    
+                                                                    x            xx xxxxxxx        xxxxxxxxxxxxx xxxx    xxx   xxx   x        xx       x      x               x  x  x               x  x
+                                                                          x           xxxxxx       xxxxxxxxx  xxx                              xxxxx                               xxxx                 
+                                                                                   x    xxxxx     xxxx  xxx xx                     x     x  x    xxxx                               xxxx       x        
+                                                                                     x    xx     xxxxxxx x         x     xxx   xx  x   xx  x       xxx                           x    xxx     x  xx     
+                                                                              x       x     x xxxxxxx             xxxxx xx       xx     x            x xx  xxx    xxxxxxx    x  xxx     xx      x x     
+                                                                                                xxx              x                                      xxxxxx xxxxxxxxxxxxxx xx  xxxxx   xx            
+                                                                                             xxx       xx  x  x                        x                xx xxxx   xxxxxxxxxxx xxxxxxx      xx           
+                                                                                                        x                              xx                x         xxx   xxxxxxxxxxxxxxx    xxxxxx    xx
+                                                                                                                                      xxxx      x                          xxxxxxxxxxx  x     xxxxxxxxxx
+                                                                                                                              x        xxx                                 xxxxxxxxxxxxx       xxxxxxxxx
+                                                                                                     x                                 xxxx                                xxxxxx  x xxxxx         xxxxx
+                                                                                                                                        xxxx                      xx       xxxxxxxx    xxxx          xxx
+        `;
+
+        // Вставляем ASCII-арт в контейнер
+        const container = document.getElementById('ascii-art');
+        const lines = asciiOwl.split('\n');
+        
+        lines.forEach(line => {
+            const lineDiv = document.createElement('div');
+            
+            for (let char of line) {
+                const charSpan = document.createElement('span');
+                charSpan.textContent = char;
+                
+                // Добавляем свечение только к символам "x"
+                if (char === 'x') {
+                    charSpan.classList.add('x-char');
+                }
+                
+                lineDiv.appendChild(charSpan);
+            }
+            
+            container.appendChild(lineDiv);
+        });
+
+        // Автоматическое обновление времени
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                timeZone: 'Europe/Kiev',
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            const timeString = now.toLocaleString('ru-RU', options);
+            
+            // Находим элемент с датой следующего обновления
+            const nextUpdateElem = document.querySelector('.info-panel li:nth-child(5)');
+            if (nextUpdateElem) {
+                nextUpdateElem.innerHTML = `<strong>ТЕКУЩЕЕ ВРЕМЯ (UTC+2):</strong> ${timeString}`;
+            }
+        }
+
+        // Обновляем время каждую секунду
+        setInterval(updateTime, 1000);
+        updateTime(); // Первый вызов
+    </script>
 </body>
 </html>
