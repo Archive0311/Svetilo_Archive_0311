@@ -1,246 +1,145 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>СИСТЕМА 0311</title>
-    <link rel="icon" href="https://raw.githubusercontent.com/Archive0311/Svetilo_Archive_0311/main/favicon.ico" type="image/x-icon">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            cursor: none;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0311</title>
 
-        body {
-            background: #000;
-            color: #ff0000;
-            font-family: 'Courier New', monospace;
-            overflow: hidden;
-            height: 100vh;
-            position: relative;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    cursor: none;
+}
 
-        /* Эффект статичного шума */
-        .noise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 1;
-            animation: noise 0.2s infinite;
-            opacity: 0.4;
-        }
+body {
+    background: #000;
+    color: #ff0000;
+    font-family: "Courier New", monospace;
+    overflow: hidden;
+    height: 100vh;
+}
 
-        @keyframes noise {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-10px, -10px); }
-        }
+/* ===== МЯГКИЙ ШУМ ===== */
+.noise {
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+    animation: noiseMove 1.5s steps(2) infinite;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 1;
+}
 
-        /* Мерцание экрана */
-        .flicker {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 0, 0, 0.03);
-            pointer-events: none;
-            z-index: 2;
-            animation: flicker 0.1s infinite;
-        }
+@keyframes noiseMove {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(-2px,-2px); }
+}
 
-        @keyframes flicker {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-        }
+/* ===== ДЫХАНИЕ ЭКРАНА ===== */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.4) 70%);
+    animation: breathe 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 2;
+}
 
-        /* Полоса помех */
-        .scanline {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(to right, transparent, #ff0000, transparent);
-            box-shadow: 0 0 10px #ff0000;
-            pointer-events: none;
-            z-index: 3;
-            animation: scan 4s linear infinite;
-        }
+@keyframes breathe {
+    0%,100% { opacity: 0.2; }
+    50% { opacity: 0.45; }
+}
 
-        @keyframes scan {
-            0% { top: 0%; }
-            100% { top: 100%; }
-        }
+/* ===== ASCII ===== */
+.ascii-container {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: pre;
+    font-size: clamp(4px, 0.45vw, 9px);
+    line-height: 1;
+    text-align: center;
+    z-index: 3;
+    transition: filter 2s ease, transform 2s ease;
+}
 
-        /* Контейнер для ASCII */
-        .ascii-container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            white-space: pre;
-            font-size: 8px;
-            line-height: 1;
-            color: #ff0000;
-            letter-spacing: 0.5px;
-            text-align: center;
-            z-index: 4;
-            max-width: 100vw;
-            max-height: 100vh;
-            overflow: hidden;
-            padding: 20px;
-        }
+.x {
+    text-shadow:
+        0 0 3px #ff0000,
+        0 0 10px #ff3333;
+    animation: glow 2s ease-in-out infinite alternate;
+}
 
-        /* Свечение для 'x' */
-        .x-char {
-            text-shadow: 
-                0 0 3px #ff0000,
-                0 0 6px #ff3333,
-                0 0 12px #ff6666;
-            animation: glow 1.5s infinite alternate;
-        }
+@keyframes glow {
+    from { opacity: 0.75; }
+    to { opacity: 1; }
+}
 
-        @keyframes glow {
-            from { opacity: 0.7; }
-            to { opacity: 1; }
-        }
+/* ===== МЕРЦАНИЕ ===== */
+.blink {
+    animation: blink 1.8s infinite;
+}
+@keyframes blink {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
 
-        /* Случайные мерцающие символы */
-        .blink {
-            animation: blink 0.3s infinite;
-        }
+/* ===== РЕЗКИЙ СБОЙ ===== */
+.glitch {
+    animation: glitch 0.15s steps(2) infinite;
+    filter: contrast(2) brightness(1.4);
+}
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.2; }
-        }
+@keyframes glitch {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(-6px,2px); }
+    50% { transform: translate(6px,-2px); }
+    75% { transform: translate(-4px,4px); }
+    100% { transform: translate(0,0); }
+}
 
-        /* Скрытый текст в углу */
-        .hidden-text {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 9px;
-            color: #330000;
-            opacity: 0.3;
-            z-index: 5;
-        }
+/* ===== ВСПЫШКА ===== */
+.flash {
+    position: fixed;
+    inset: 0;
+    background: rgba(255,0,0,0.15);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9;
+}
 
-        /* Всплывающие сообщения */
-        .message {
-            position: fixed;
-            font-size: 12px;
-            color: #ff0000;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 6;
-            animation: float 5s linear;
-            text-shadow: 0 0 5px #ff0000;
-        }
-
-        @keyframes float {
-            0% { top: 100%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 0%; opacity: 0; }
-        }
-
-        /* Мигающий курсор */
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 16px;
-            background-color: #ff0000;
-            margin-left: 2px;
-            animation: cursor-blink 0.8s infinite;
-            vertical-align: middle;
-        }
-
-        @keyframes cursor-blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* Статус бар */
-        .status-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            border-top: 1px solid #ff0000;
-            padding: 5px 10px;
-            font-size: 10px;
-            z-index: 7;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* Предупреждение */
-        .warning {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 14px;
-            color: #ff0000;
-            text-align: center;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 8;
-            animation: warning 10s infinite;
-            text-shadow: 0 0 10px #ff0000;
-        }
-
-        @keyframes warning {
-            0%, 95% { opacity: 0; }
-            96%, 100% { opacity: 1; }
-        }
-    </style>
+/* ===== ТЕКСТ В УГЛУ ===== */
+.label {
+    position: fixed;
+    bottom: 8px;
+    left: 8px;
+    font-size: 10px;
+    opacity: 0.35;
+    z-index: 4;
+}
+</style>
 </head>
+
 <body>
-    <div class="noise"></div>
-    <div class="flicker"></div>
-    <div class="scanline"></div>
-    
-    <div class="ascii-container" id="ascii-art"></div>
-    
-    <div class="hidden-text">
-        0311<br>
-        АРХИВ АКТИВЕН<br>
-        НЕ ЗАКРЫВАЙ
-    </div>
-    
-    <div class="warning" id="warning">
-        ⚠ СИСТЕМА НАБЛЮДАЕТ ЗА ТОБОЙ ⚠
-    </div>
-    
-    <div class="status-bar">
-        <span>СИСТЕМА 0311 | ЦЕЛЬ: SVETILO_0 | СТАТУС: <span style="color:#00ff00;">АКТИВНО</span></span>
-        <span id="time">00:00:00</span>
-    </div>
 
-    <!-- Скрытая ссылка -->
-    <a href="0311.html" style="position: fixed; top: 5px; left: 5px; color: #330000; font-size: 8px; text-decoration: none; opacity: 0.1; z-index: 1000;">0311</a>
+<div class="noise"></div>
+<div class="flash" id="flash"></div>
+<div class="ascii-container" id="ascii"></div>
+<div class="label">СИСТЕМА 0311 НАБЛЮДАЕТ</div>
 
-    <!-- Аудио -->
-    <audio id="static" loop>
-        <source src="https://assets.mixkit.co/active_storage/sfx/286/286-preview.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="click">
-        <source src="https://assets.mixkit.co/active_storage/sfx/250/250-preview.mp3" type="audio/mpeg">
-    </audio>
+<audio id="static" loop>
+    <source src="https://assets.mixkit.co/active_storage/sfx/286/286-preview.mp3">
+</audio>
 
-    <script>
-        // ASCII-арт (твой оригинальный)
-        const asciiOwl = `                                                                                                                                               
+<script>
+/* ===== ASCII ===== */
+        const art = `                                                                                                                                               
                                               xxxxxxxxxxx                                                                                       x                                                     
                                              xxxxxxxxxxxxx                                                                                     x                                                      
                                                xxxxxxxxxxxxx                                                                               xx x                                                       
@@ -317,114 +216,54 @@
                                                                                                                                         xxxx                      xx       xxxxxxxx    xxxx          xxx
         `;
 
-        // Вставляем ASCII-арт
-        const container = document.getElementById('ascii-art');
-        const lines = asciiOwl.split('\n');
-        
-        lines.forEach((line, lineIndex) => {
-            const lineDiv = document.createElement('div');
-            
-            for (let char of line) {
-                const charSpan = document.createElement('span');
-                charSpan.textContent = char;
-                
-                if (char === 'x') {
-                    charSpan.classList.add('x-char');
-                }
-                
-                // Случайное мерцание
-                if (Math.random() < 0.01) {
-                    charSpan.classList.add('blink');
-                }
-                
-                lineDiv.appendChild(charSpan);
-            }
-            
-            container.appendChild(lineDiv);
-        });
+const ascii = document.getElementById("ascii");
 
-        // Обновление времени
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleString('ru-RU', {
-                timeZone: 'Europe/Kiev',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            document.getElementById('time').innerHTML = `${timeString}`;
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
+art.split("\n").forEach(line => {
+    const row = document.createElement("div");
+    for (const c of line) {
+        const s = document.createElement("span");
+        s.textContent = c;
+        if (c === "x") s.classList.add("x");
+        if (Math.random() < 0.008) s.classList.add("blink");
+        row.appendChild(s);
+    }
+    ascii.appendChild(row);
+});
 
-        // Случайные сообщения
-        const messages = [
-            "ОН ТЕБЯ ВИДИТ",
-            "НЕ ОБОРАЧИВАЙСЯ",
-            "0311 ВСЁ ЗНАЕТ",
-            "ТЫ В АРХИВЕ",
-            "БЕГСТВО БЕССМЫСЛЕННО",
-            "СИСТЕМА АКТИВНА",
-            "НЕТ ВЫХОДА"
-        ];
+/* ===== ФОНОВЫЙ ШУМ ===== */
+const staticSound = document.getElementById("static");
+setTimeout(() => {
+    staticSound.volume = 0.08;
+    staticSound.play().catch(()=>{});
+}, 1200);
 
-        setInterval(() => {
-            if (Math.random() < 0.3) {
-                const msg = document.createElement('div');
-                msg.className = 'message';
-                msg.textContent = messages[Math.floor(Math.random() * messages.length)];
-                msg.style.left = Math.random() * 85 + '%';
-                document.body.appendChild(msg);
-                setTimeout(() => msg.remove(), 5000);
-            }
-        }, 2000);
+/* ===== МЕДЛЕННОЕ ВТЯГИВАНИЕ ===== */
+let zoom = 1;
+setInterval(() => {
+    zoom += 0.002;
+    ascii.style.transform = `scale(${zoom})`;
+}, 4000);
 
-        // Звуки
-        const staticSound = document.getElementById('static');
-        const clickSound = document.getElementById('click');
+/* ===== РЕЗКИЙ СБОЙ КАЖДЫЕ ~30 СЕК ===== */
+const flash = document.getElementById("flash");
 
-        // Включить фоновый шум
-        setTimeout(() => {
-            staticSound.volume = 0.1;
-            staticSound.play().catch(() => {});
-        }, 1000);
+setInterval(() => {
+    ascii.classList.add("glitch");
+    flash.style.opacity = "1";
+    staticSound.volume = 0.3;
 
-        // Клик = звук
-        document.addEventListener('click', () => {
-            clickSound.currentTime = 0;
-            clickSound.play().catch(() => {});
-        });
+    setTimeout(() => {
+        ascii.classList.remove("glitch");
+        flash.style.opacity = "0";
+        staticSound.volume = 0.08;
+    }, 250);
+}, 30000);
 
-        // Случайные вспышки предупреждения
-        setInterval(() => {
-            if (Math.random() < 0.1) {
-                document.getElementById('warning').style.animation = 'none';
-                setTimeout(() => {
-                    document.getElementById('warning').style.animation = 'warning 10s infinite';
-                }, 10);
-            }
-        }, 3000);
+/* ===== ПРЕДУПРЕЖДЕНИЕ ПРИ ВЫХОДЕ ===== */
+window.onbeforeunload = e => {
+    e.returnValue = "СИСТЕМА НЕ ЗАВЕРШЕНА";
+};
+</script>
 
-        // Изменение заголовка
-        const titles = ["0311", "СИСТЕМА АКТИВНА", "НЕ ЗАКРЫВАЙ", "ОН СМОТРИТ"];
-        let titleIndex = 0;
-        setInterval(() => {
-            document.title = titles[titleIndex];
-            titleIndex = (titleIndex + 1) % titles.length;
-        }, 2000);
-
-        // Предупреждение при закрытии
-        window.addEventListener('beforeunload', (e) => {
-            e.preventDefault();
-            e.returnValue = 'СИСТЕМА 0311 НЕ ОТПУСТИТ';
-        });
-
-        // Сообщение в консоль
-        console.log('%c⚠ СИСТЕМА 0311 ⚠', 'color: red; font-size: 24px; font-weight: bold;');
-        console.log('Архив наблюдения активен');
-        console.log('Цель: SVETILO_0');
-        console.log('Дата: 01.01.2026');
-        console.log('Не пытайтесь вмешиваться в систему.');
-    </script>
 </body>
 </html>
