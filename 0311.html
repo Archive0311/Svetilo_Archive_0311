@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>0311</title>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            color: #ff0000;
+            overflow: auto;
+        }
+        
+        .ascii-container {
+            white-space: pre;
+            font-size: 12px;
+            line-height: 1;
+            color: #ff0000;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Легкое свечение для символов "x" */
+        .ascii-container span.x-char {
+            text-shadow: 0 0 3px #ff0000, 0 0 6px #ff3333;
+        }
+        
+        /* Легкое свечение для пробелов вокруг символов "x" */
+        .ascii-container:hover {
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="ascii-container" id="ascii-art"></div>
+
+    <script>
+        const asciiOwl = `                                                                                                                                               
+                                              xxxxxxxxxxx                                                                                       x                                                     
+                                             xxxxxxxxxxxxx                                                                                     x                                                      
+                                               xxxxxxxxxxxxx                                                                               xx x                                                       
+                                                  xxx xxxxxxx                                xxxxxxxx                                     xxx                                                          
+                                                    xxxxxxxxxx                  xxx              xxxxxxxxxxx                           x  xxx                                                          
+                                                        xxxxxx               xxx xx  x  xx           xx  x            x  xxxxx x    xxxxxxx                                                            
+                                                          xxxxx                  x   x xx          xx     xxx xx                  xxxxxxx                                                              
+                                                             xxxxx       xx           xxxx       xxxxxx                 xxxxxx      xxxx                                                               
+                                                             xxxxx    xxxxxxxxxxx  x    x   xx   xxxxxxxx    xx  xxxxx                                                                                 
+                                                           xxxxxxxxxx  xxx xxxxxxx                xxxx   x     xx   x  xx      x  xx                                 x                                
+                                                           xx xxxxxxxxx   xxx  xxx  xxx  xx   xxxxxx xxxx      xxxx     x x   xxxxxx   xx                                                             
+                                                         xxxxxxxxxxxxxx  xx xxxx   xx  xx    xxx        xxxx    xxxxxx     xxxxxxxxx  xx x  x                                                         
+                                                             xxxxxxxxxxx     x  x     x  xxxxx  xxx  xxx xxxxxxx x       x  xxxxxxx xxx     x                                                         
+                                                         xxxxxxxxxxxxxxx x x xx    xxxxxxxxxxxxxxx xx   xxxxx     x  xxxxxxxxxxxx                                xxxxxx                               
+                                                            xxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxx  xxx  xx xxxxxx   xxxxx       x                                  xxxxxx                              
+                                x                           xxxxxxxxxx      xx xxxxxx      xx  xxxxxxxx xxx x  xxxxxxxx    xxx  x xxxxxx                                                               
+                             xx                               x   xxxx     xxx    xx xxx xxxx xxx   xxxxxx      xxxx      x xxxxxxxxxxxx                        xx xxxx x                             
+                                                                  xxxxxxxxxxx xxx   x  xx  xxx       xxxxx xxxx  xxxxx   xxxxxxxxxxxxx x                       xx xxxxxxxx                            
+                            x                                xx    xxxxxxxxxxxxx    xxxx xx   xxxxxxxxxx    xxxxx xxxx    x xxxxxxxxx                            xxxxxxxxxxxx                          
+                           x                                xxxxxx   xx xxxxxxxxxx xxxxxx  xxxxxxx      xxx  xxxxxxxxxxxxxxxxxxxxxxxxxx                           xxxxxxxxxxxx                         
+                                                             xxxxxxx xxxxxxxxx xxxx  xx xxxxx  xxxx xx   xxxxxxxxxxxxxxx xxxxxxxxxxxxx                                 xxxxxxxx                        
+                                       x                     xxxxxx  xxxxxxx   xxx  xx xxxxxx xx  xxxxx   xxxxxxxxx x  x xxx    xxxx x                                    xxxxx                        
+                                         x                    xxxxxxxx   xxxx       xxxxx xx xxx xxxx  xxx xxxxxxxxxxxxxxxxxxxxxxxxx  x                   x              xxxxxxxx                      
+                                                               xxxxxxxx  xxxxxxxxx  xx xx x xxxxxxxxx xxxxx xxxxxxxxxxxxxxxxxxxxxx x                   xxxx    xx          xxxxxxx                     
+                                                             xx  x xxxxx  x xxx        xxxx xxxxxxxx x   xxxxxxxxxx  xxxxxxxxxxxxx                     xx   xx             xxxxxx                      
+                                                               xxxxxxxxxx xxxxxxx    xxx x     xxxxxxx   xxxxxxxxxxxxxx xx xxxxxxxx                      xx   x             xxxx xx                     
+                                                                xx xxxxxx  xxxxxxx xxx x xx      xxxxxx    x  xx xxxxx   xxxxxxxx xx x                 xxxx xxxxxxx    x      xxx xx                    
+                                            xxxxxxxxxx            xxxxxxx   xxxxx xxxxx    x      xxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxx x              xx    xx   xx               xxx x                    
+                                            x    x                    xxxxx xxxxx  xxxxx          xxx xxx xxxxxxxxxxxxxx xxxxxxxx       xxxxxxxxxxxxxxxxxxxxxx     xx          xxxx x                   
+                                                                   xxx   xx  x xx  xx xxx xxx     xxxxxxx xxxxxxxxxxxxxxxxxxxxxxxx      x       xxxxxxx  xxx                    xxxx                    
+                                                                      xxxxxx  xx       xxxx xxxxx xx  x xx  x      xx xxxxxxxxxx                                    xx             xx                   
+                                                                    xxxxx xx  xxxxx xxxxxxxxxxxx xx  x xx xxx  xxxxx   xxxxxx                                                    xx      x              
+                                                                      xxxxxxx x xx     xx xxxxxxxx    xxxxxxxxxxxx xxxxxxxx                                                      xx                     
+                                                                         xxxxx         xx  xxxxx xx   xx  xx xxxxxx xxx                        x                      xx     x       xx   x             
+                                                xxx                       xxxxx  xxx    xxxxxxxxxxx xx        x xxxxxx                      xxxxx                                 xxx  x                
+                                                xxxx                        xxxx  xx xx  xxxxxxxx  xx x  xxxxxxxx xx                       xxxxxxx                     xx       x     x                 
+                                                xxxxxx                       xxxxxxxx  xxxxxx  xxx xxxxxxxxxxxxxxx       xx xxxx         xxxxxxxxx   x                                                   
+                                                 xxxxxxxxx                     xxxxxxxxxxxxxx x     xx  xxxxxxxxxxx       xxxxxxxxxxxxxxxxxxxxxxx   xxxx                               x   x            
+                                                   xxxxxxxxxx    xx              xxxxxx xxx    xxxxx     xxxxxxx           xxxxxxxxxxxxxxxxxxxx    xxxxxx                                    x          
+                                                      xxxxxxxxxxxx               xxxxxxxxxxxxxx        xxxxxxx x  xxx         xxxxxxxxxxxxxx     xxxxxx       xxx                         xx            
+                                            xx xxx                                xxxxxxxxx  x    xxxxxxxxxxxx x  xxxx x            xxxxx     xxxxxxxxx   x     xx                         x            
+                                                    x xx                         xxxxxxxxxxxxxxxxxxxxxxxxxxxx    xxxxxx xxxxx xxxxxxxxxxxxxxxxxxxxxx                                        x           
+                                                  xxxx xx        xxxxxxxx            x xxxxxxxxx xxxxxxxxxxxxx  xxxxxxxxxxxxxxx    xxxxxxxxxxxxxxxx  x      x     x            x              x         
+                                                      x       xxxxxxxxxxx                 xx x  xxxxxxxxxxx x    xxxxxxxxx xxxxxxxxxxx   xxx  xx     x  x     x      x                        xx        
+                                                          xxxxxxxxxxxxxxxxxxx          x  xxx xx   xxxx        xxxxxxxxxx  xxx xxxxxxxxxxxxxxxx xxx    xxxx  xxx        x    x                          
+                                                     xx xxxxxxxxxx xxxxxx  xx   x     x      xxxxxx   x x    xxxxxxxxxxxx    xxxxxxxxxxxxxxxxxxxxxxxxx  x     xx           xx        x  x               
+                                                   xxxxxxx  xx       xxxxx   x    xxx    x   xxxxxx xxxxxxx  xxxxxxx xx xxxxxxxxx xxxxxxxxxxxxxxxxxxx xxxx  x   x    x   xxx                            
+                                          x x   xxxxxx xx  x         xxxx  xxx   xxxxx   x  xxx xxxxxxx  xxx x xxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxx xx              xxxxx   x      x                  
+                       x                   x  x xxxxxxxx              xxxxxxx   x   xxxxxxx xxxxxxx  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxx  x      xxx  xxx  xx xxx                    
+                         xx                 x   xxxx        x xxx       x xx xxxxx xxxxx      xxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  xxxxxxxx x x  xx   xxxxxxxxxx                          
+                          x                  x        xxxxxx xxx  xx     xxxxxxxxxxxxxxxxxx   xxxx  xxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx    x   xxxx  xxxxxx x x            x       
+                                                           xxx  xxxxxxx   xxxxxxxxxxx xxxx     xxx     xxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx        x xxx x xx xxx  x           x       
+                         x                                x xxx xxxxxxxxxxx xxxxxxxxxxxxx     xxxx    xxxxxxxxxxxxxxxxxxxxxxxxxxx   x     xxxxxxxxxxxx xx  xxx xx xx     xx   x x          x            
+                                                   xx     xx  xx  xxxxxx  x  xxxxxxxxxxxx      xx     xxxxxxxxxxxxxxxxxxxxxxxx  xxxxxxxx           xxx      xx  xxx       xx      x    xxxx x  x   x    
+                                                xx   xx x    xx  x   xx x  x   xxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxx  xxx       xxx  xxxxx xxxxxxxxx xx   xx  xx          xxx      xx             
+                                                 xxxx xxx      x       xxxxxxxxxxxxxxxx               xxxxxxxxxxxxxxxxxxxx x         xxxxxxxxxxxxxxxxxxxxxxxxxxxx  xx              x x           xx      
+                                               xxxxxx        xxx      x xxxxxxxxxxxx                     xxxxxxxxxxxxxxxxx  xxxxxxx x   x      xxxxxxxxxx  xxxxxxx    xx x           x                   
+                                               xxx            x    xxxxxxxxxxxxxxxxxxx                    xxxxxx xxxxxxxxxx  x    xx         x    xxxxxxxxx  xxxxxxxx                     x              
+                                            x x x           x         xxxxxxxxxxxxxxxxxx                xxxxxxxxx xxxxxxxxx                   xxxx    xxxx      xxxxxxx                                  
+                                  x          xx                      xx xxx xxxxxxxxxxxxx              xxxxxxxxxxxxxxxxxx  xx                  x   x      xx   x      x                           x      
+                                                                           xx  xxxxxxxxxxx            xxxxxxxxxxxxxxxxx  xxx                     x  x   xxxxx    x                                xx     
+                                         x                                    xx xxxxxxxxx          xxxxxxxxxxxxxxx  xxxx   xxx x    xx      x       x     xxx                                      x    
+                                                                    x            xx xxxxxxx        xxxxxxxxxxxxx xxxx    xxx   xxx   x        xx       x      x               x  x  x               x  x
+                                                                          x           xxxxxx       xxxxxxxxx  xxx                              xxxxx                               xxxx                 
+                                                                                   x    xxxxx     xxxx  xxx xx                     x     x  x    xxxx                               xxxx       x        
+                                                                                     x    xx     xxxxxxx x         x     xxx   xx  x   xx  x       xxx                           x    xxx     x  xx     
+                                                                              x       x     x xxxxxxx             xxxxx xx       xx     x            x xx  xxx    xxxxxxx    x  xxx     xx      x x     
+                                                                                                xxx              x                                      xxxxxx xxxxxxxxxxxxxx xx  xxxxx   xx            
+                                                                                             xxx       xx  x  x                        x                xx xxxx   xxxxxxxxxxx xxxxxxx      xx           
+                                                                                                        x                              xx                x         xxx   xxxxxxxxxxxxxxx    xxxxxx    xx
+                                                                                                                                      xxxx      x                          xxxxxxxxxxx  x     xxxxxxxxxx
+                                                                                                                              x        xxx                                 xxxxxxxxxxxxx       xxxxxxxxx
+                                                                                                     x                                 xxxx                                xxxxxx  x xxxxx         xxxxx
+                                                                                                                                        xxxx                      xx       xxxxxxxx    xxxx          xxx
+        `;
+
+        // Вставляем ASCII-арт в контейнер
+        const container = document.getElementById('ascii-art');
+        const lines = asciiOwl.split('\n');
+        
+        lines.forEach(line => {
+            const lineDiv = document.createElement('div');
+            
+            for (let char of line) {
+                const charSpan = document.createElement('span');
+                charSpan.textContent = char;
+                
+                // Добавляем свечение только к символам "x"
+                if (char === 'x') {
+                    charSpan.classList.add('x-char');
+                }
+                
+                lineDiv.appendChild(charSpan);
+            }
+            
+            container.appendChild(lineDiv);
+        });
+    </script>
+</body>
+</html>
