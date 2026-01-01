@@ -1,144 +1,269 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>0311</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="СИСТЕМА 0311 - АРХИВ НАБЛЮДЕНИЯ">
+    <title>СИСТЕМА 0311 АКТИВНО</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/Archive0311/Svetilo_Archive_0311/main/favicon.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    user-select: none;
-    cursor: none;
-}
+        body {
+            background-color: #000000;
+            color: #ff0000;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+            cursor: none;
+        }
 
-body {
-    background: #000;
-    color: #ff0000;
-    font-family: "Courier New", monospace;
-    overflow: hidden;
-    height: 100vh;
-}
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 0, 0, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 0, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px, 70px 70px;
+            animation: noise 0.2s infinite;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.4;
+        }
 
-/* МЯГКИЙ ШУМ */
-.noise {
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
-    animation: noiseMove 1.5s steps(2) infinite;
-    opacity: 0.25;
-    pointer-events: none;
-    z-index: 1;
-}
+        @keyframes noise {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 50px 50px, 70px 70px; }
+        }
 
-@keyframes noiseMove {
-    0%,100% { transform: translate(0,0); }
-    50% { transform: translate(-2px,-2px); }
-}
+        
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.95; }
+            51% { opacity: 0.99; }
+            52% { opacity: 0.97; }
+        }
 
-/* ДЫХАНИЕ ЭКРАНА */
-body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.45) 70%);
-    animation: breathe 6s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 2;
-}
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            animation: flicker 0.1s infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
 
-@keyframes breathe {
-    0%,100% { opacity: 0.25; }
-    50% { opacity: 0.5; }
-}
+        .container {
+            position: relative;
+            z-index: 3;
+            padding: 10px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-/* ASCII */
-.ascii-container {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    white-space: pre;
-    font-size: clamp(4px, 0.45vw, 9px);
-    line-height: 1;
-    text-align: center;
-    z-index: 3;
-    transition: filter 2s ease, transform 2s ease;
-}
+        .header {
+            text-align: center;
+            padding: 10px;
+            border-bottom: 1px solid #ff0000;
+            margin-bottom: 5px;
+            position: relative;
+        }
 
-.x {
-    text-shadow:
-        0 0 3px #ff0000,
-        0 0 10px #ff3333;
-    animation: glow 2s ease-in-out infinite alternate;
-}
+        .header h1 {
+            font-size: 2.8rem;
+            letter-spacing: 5px;
+            text-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
+            animation: pulse 2s infinite;
+        }
 
-@keyframes glow {
-    from { opacity: 0.75; }
-    to { opacity: 1; }
-}
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
 
-.blink {
-    animation: blink 1.8s infinite;
-}
-@keyframes blink {
-    0%,100% { opacity: 1; }
-    50% { opacity: 0.6; }
-}
+        .header p {
+            font-size: 0.9rem;
+            color: #cc0000;
+            margin-top: 5px;
+        }
 
-/* ГЛИТЧ */
-.glitch {
-    animation: glitch 0.15s steps(2) infinite;
-    filter: contrast(2) brightness(1.4);
-}
+        .ascii-container {
+            white-space: pre;
+            font-size: 10px;
+            line-height: 1;
+            color: #ff0000;
+            letter-spacing: 0.3px;
+            flex-grow: 1;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            padding: 5px;
+            border: 1px dashed #990000;
+            margin: 5px 0;
+            background: rgba(0, 0, 0, 0.8);
+        }
 
-@keyframes glitch {
-    0% { transform: translate(0,0); }
-    25% { transform: translate(-6px,2px); }
-    50% { transform: translate(6px,-2px); }
-    75% { transform: translate(-4px,4px); }
-    100% { transform: translate(0,0); }
-}
+        .ascii-container span.x-char {
+            text-shadow: 0 0 3px #ff0000, 0 0 6px #ff3333;
+            animation: glow 1.5s infinite alternate;
+        }
 
-/* ВСПЫШКА */
-.flash {
-    position: fixed;
-    inset: 0;
-    background: rgba(255,0,0,0.2);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 9;
-}
+        @keyframes glow {
+            from { text-shadow: 0 0 3px #ff0000, 0 0 6px #ff3333; }
+            to { text-shadow: 0 0 6px #ff0000, 0 0 12px #ff3333, 0 0 18px #ff6666; }
+        }
 
-/* МЕТКА */
-.label {
-    position: fixed;
-    bottom: 8px;
-    left: 8px;
-    font-size: 10px;
-    opacity: 0.35;
-    z-index: 4;
-}
-</style>
+        /* Случайные мерцающие символы */
+        .blink-char {
+            animation: char-blink 0.3s infinite;
+        }
+
+        @keyframes char-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        .info-panel {
+            background: rgba(10, 0, 0, 0.9);
+            border: 1px solid #ff0000;
+            padding: 12px;
+            margin-top: 5px;
+            font-size: 0.85rem;
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+        }
+
+        .info-panel h2 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            text-align: center;
+            color: #ff4444;
+            text-transform: uppercase;
+        }
+
+        .info-panel ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-panel li {
+            margin-bottom: 6px;
+            padding-left: 15px;
+            position: relative;
+            border-left: 2px solid #990000;
+            padding-left: 10px;
+        }
+
+        .status {
+            color: #00ff00;
+            font-weight: bold;
+            text-shadow: 0 0 8px #00ff00;
+            animation: status-pulse 1s infinite;
+        }
+
+        @keyframes status-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #880000;
+            padding: 8px;
+            border-top: 1px solid #660000;
+            margin-top: 5px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background-color: #ff0000;
+            margin-left: 3px;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
+
+        /* Всплывающие сообщения */
+        .glitch-text {
+            position: fixed;
+            font-size: 0.7rem;
+            color: #ff0000;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+            animation: float 5s linear;
+        }
+
+        @keyframes float {
+            0% { top: 100%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 0%; opacity: 0; }
+        }
+
+        @keyframes scanline {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="screen"></div>
+    <div class="scanline"></div>
 
-<div class="noise"></div>
-<div class="flash" id="flash"></div>
-<div class="ascii-container" id="ascii"></div>
-<div class="label">СИСТЕМА 0311 НАБЛЮДАЕТ</div>
+    <div class="container">
+        <div class="header">
+            <h1>СИСТЕМА <span class="blink">0311</span></h1>
+            <p>АРХИВ НАБЛЮДЕНИЯ | СТАТУС: <span class="status">АКТИВЕН</span></p>
+        </div>
 
-<audio id="static" loop>
-    <source src="https://assets.mixkit.co/active_storage/sfx/286/286-preview.mp3">
-</audio>
+        <div class="ascii-container" id="ascii-art"></div>
 
-<script>
-const art = `
-                                                                                                                                               
+        <div class="info-panel">
+            <h2>СТАТУС АРХИВА</h2>
+            <ul>
+                <li><strong>ЦЕЛЬ:</strong> SVETILO_0</li>
+                <li><strong>ДАТА АКТИВАЦИИ:</strong> 01.01.2026</li>
+                <li><strong>СТАТУС:</strong> <span class="status">НАБЛЮДЕНИЕ АКТИВНО</span></li>
+                <li><strong>ФАЗА:</strong> 2 (АРХИВАЦИЯ)</li>
+                <li id="current-time"><strong>ТЕКУЩЕЕ ВРЕМЯ (UTC+2):</strong> ЗАГРУЗКА...</li>
+                <li><strong>ЗАФИКСИРОВАННЫЕ КАНАЛЫ:</strong><br>
+                    █ Discord-сервер Svetilo_0<br>
+                    █ Telegram-канал Svetilo_Squad<br>
+                    █ YouTube-трансляции<br>
+                    █ Twitch-стримы
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>АРХИВ ЯВЛЯЕТСЯ ЧАСТЬЮ СИСТЕМЫ НАБЛЮДЕНИЯ 0311</p>
+            <p>ВСЕ ДАННЫЕ ЗАФИКСИРОВАНЫ<span class="cursor"></span></p>
+            <p style="font-size: 6px; opacity: 0.3;">https://archive0311.github.io/Svetilo_Archive_0311/</p>
+        </div>
+    </div>
+
+    
+    <a href="0311.html" style="position: fixed; bottom: 5px; right: 5px; color: #330000; font-size: 6px; text-decoration: none; opacity: 0.1; z-index: 1000;">0311</a>
+
+    <script>
+        const asciiOwl = `                                                                                                                                               
                                               xxxxxxxxxxx                                                                                       x                                                     
                                              xxxxxxxxxxxxx                                                                                     x                                                      
                                                xxxxxxxxxxxxx                                                                               xx x                                                       
@@ -213,55 +338,90 @@ const art = `
                                                                                                                               x        xxx                                 xxxxxxxxxxxxx       xxxxxxxxx
                                                                                                      x                                 xxxx                                xxxxxx  x xxxxx         xxxxx
                                                                                                                                         xxxx                      xx       xxxxxxxx    xxxx          xxx
-`;
+        `;
 
-const ascii = document.getElementById("ascii");
+        
+        const container = document.getElementById('ascii-art');
+        const lines = asciiOwl.split('\n');
+        
+        lines.forEach(line => {
+            const lineDiv = document.createElement('div');
+            
+            for (let char of line) {
+                const charSpan = document.createElement('span');
+                charSpan.textContent = char;
+                
+                if (char === 'x') {
+                    charSpan.classList.add('x-char');
+                }
+                
+                
+                if (Math.random() < 0.005) {
+                    charSpan.classList.add('blink-char');
+                }
+                
+                lineDiv.appendChild(charSpan);
+            }
+            
+            container.appendChild(lineDiv);
+        });
 
-art.split("\n").forEach(line => {
-    const row = document.createElement("div");
-    for (const c of line) {
-        const s = document.createElement("span");
-        s.textContent = c;
-        if (c === "x") s.classList.add("x");
-        if (Math.random() < 0.008) s.classList.add("blink");
-        row.appendChild(s);
-    }
-    ascii.appendChild(row);
-});
+        
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('ru-RU', {
+                timeZone: 'Europe/Kiev',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('current-time').innerHTML = `<strong>ТЕКУЩЕЕ ВРЕМЯ (UTC+2):</strong> ${timeString}`;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
 
-// Фоновый шум
-const staticSound = document.getElementById("static");
-setTimeout(() => {
-    staticSound.volume = 0.08;
-    staticSound.play().catch(()=>{});
-}, 1200);
+        
+        const glitchMessages = [
+            "ДОСТУП ОГРАНИЧЕН",
+            "СИСТЕМА НАБЛЮДАЕТ",
+            "0311",
+            "АРХИВИРОВАНИЕ...",
+            "ЦЕЛЬ ОБНАРУЖЕНА",
+            "НЕТ ВЫХОДА",
+            "ВСЕ ДАННЫЕ ЗАФИКСИРОВАНЫ"
+        ];
 
-// Медленное втягивание
-let zoom = 1;
-setInterval(() => {
-    zoom += 0.002;
-    ascii.style.transform = `scale(${zoom})`;
-}, 4000);
+        setInterval(() => {
+            if (Math.random() < 0.3) {
+                const msg = document.createElement('div');
+                msg.className = 'glitch-text';
+                msg.textContent = glitchMessages[Math.floor(Math.random() * glitchMessages.length)];
+                msg.style.left = Math.random() * 90 + '%';
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 5000);
+            }
+        }, 2000);
 
-// Резкий сбой ~30 сек
-const flash = document.getElementById("flash");
-setInterval(() => {
-    ascii.classList.add("glitch");
-    flash.style.opacity = "1";
-    staticSound.volume = 0.3;
+        
+        function playStatic() {
+            
+            console.log("AUDIO: SYSTEM NOISE ACTIVE");
+        }
 
-    setTimeout(() => {
-        ascii.classList.remove("glitch");
-        flash.style.opacity = "0";
-        staticSound.volume = 0.08;
-    }, 250);
-}, 30000);
+        
+        document.addEventListener('click', () => {
+            document.body.style.cursor = 'none';
+            playStatic();
+        });
 
-// Блок выхода
-window.onbeforeunload = e => {
-    e.returnValue = "СИСТЕМА НЕ ЗАВЕРШЕНА";
-};
-</script>
-
+        
+        window.addEventListener('beforeunload', (e) => {
+            e.preventDefault();
+            e.returnValue = 'СИСТЕМА 0311 ВСЁ ВИДИТ';
+        });
+    </script>
 </body>
 </html>
