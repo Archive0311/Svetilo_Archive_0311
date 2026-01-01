@@ -22,7 +22,7 @@ body {
     height: 100vh;
 }
 
-/* ===== МЯГКИЙ ШУМ ===== */
+/* МЯГКИЙ ШУМ */
 .noise {
     position: fixed;
     inset: 0;
@@ -38,23 +38,23 @@ body {
     50% { transform: translate(-2px,-2px); }
 }
 
-/* ===== ДЫХАНИЕ ЭКРАНА ===== */
+/* ДЫХАНИЕ ЭКРАНА */
 body::after {
     content: "";
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.4) 70%);
+    background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.45) 70%);
     animation: breathe 6s ease-in-out infinite;
     pointer-events: none;
     z-index: 2;
 }
 
 @keyframes breathe {
-    0%,100% { opacity: 0.2; }
-    50% { opacity: 0.45; }
+    0%,100% { opacity: 0.25; }
+    50% { opacity: 0.5; }
 }
 
-/* ===== ASCII ===== */
+/* ASCII */
 .ascii-container {
     position: fixed;
     inset: 0;
@@ -81,7 +81,6 @@ body::after {
     to { opacity: 1; }
 }
 
-/* ===== МЕРЦАНИЕ ===== */
 .blink {
     animation: blink 1.8s infinite;
 }
@@ -90,7 +89,7 @@ body::after {
     50% { opacity: 0.6; }
 }
 
-/* ===== РЕЗКИЙ СБОЙ ===== */
+/* ГЛИТЧ */
 .glitch {
     animation: glitch 0.15s steps(2) infinite;
     filter: contrast(2) brightness(1.4);
@@ -104,17 +103,17 @@ body::after {
     100% { transform: translate(0,0); }
 }
 
-/* ===== ВСПЫШКА ===== */
+/* ВСПЫШКА */
 .flash {
     position: fixed;
     inset: 0;
-    background: rgba(255,0,0,0.15);
+    background: rgba(255,0,0,0.2);
     opacity: 0;
     pointer-events: none;
     z-index: 9;
 }
 
-/* ===== ТЕКСТ В УГЛУ ===== */
+/* МЕТКА */
 .label {
     position: fixed;
     bottom: 8px;
@@ -138,8 +137,8 @@ body::after {
 </audio>
 
 <script>
-/* ===== ASCII ===== */
-        const art = `                                                                                                                                               
+const art = `
+                                                                                                                                               
                                               xxxxxxxxxxx                                                                                       x                                                     
                                              xxxxxxxxxxxxx                                                                                     x                                                      
                                                xxxxxxxxxxxxx                                                                               xx x                                                       
@@ -214,7 +213,7 @@ body::after {
                                                                                                                               x        xxx                                 xxxxxxxxxxxxx       xxxxxxxxx
                                                                                                      x                                 xxxx                                xxxxxx  x xxxxx         xxxxx
                                                                                                                                         xxxx                      xx       xxxxxxxx    xxxx          xxx
-        `;
+`;
 
 const ascii = document.getElementById("ascii");
 
@@ -230,23 +229,22 @@ art.split("\n").forEach(line => {
     ascii.appendChild(row);
 });
 
-/* ===== ФОНОВЫЙ ШУМ ===== */
+// Фоновый шум
 const staticSound = document.getElementById("static");
 setTimeout(() => {
     staticSound.volume = 0.08;
     staticSound.play().catch(()=>{});
 }, 1200);
 
-/* ===== МЕДЛЕННОЕ ВТЯГИВАНИЕ ===== */
+// Медленное втягивание
 let zoom = 1;
 setInterval(() => {
     zoom += 0.002;
     ascii.style.transform = `scale(${zoom})`;
 }, 4000);
 
-/* ===== РЕЗКИЙ СБОЙ КАЖДЫЕ ~30 СЕК ===== */
+// Резкий сбой ~30 сек
 const flash = document.getElementById("flash");
-
 setInterval(() => {
     ascii.classList.add("glitch");
     flash.style.opacity = "1";
@@ -259,7 +257,7 @@ setInterval(() => {
     }, 250);
 }, 30000);
 
-/* ===== ПРЕДУПРЕЖДЕНИЕ ПРИ ВЫХОДЕ ===== */
+// Блок выхода
 window.onbeforeunload = e => {
     e.returnValue = "СИСТЕМА НЕ ЗАВЕРШЕНА";
 };
